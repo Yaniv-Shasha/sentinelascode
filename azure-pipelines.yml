@@ -11,6 +11,9 @@ trigger:
    include:
      - AnalyticsRules/*
 
+variables:
+- group: Build-Prod
+
 stages:
 - stage: build_alert_rules
 
