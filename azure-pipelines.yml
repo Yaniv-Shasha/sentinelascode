@@ -54,9 +54,8 @@ stages:
       - task: AzurePowerShell@4
         displayName: 'Create and Update Alert Rules'
         inputs:
-         azureSubscription: 'BuildEnv'
+         azureSubscription: 'Soricloud Visual Studio'
          ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRules.ps1'
          ScriptArguments: '-Workspace $(Workspace) -RulesFile analytics-rules.json'
          azurePowerShellVersion: LatestVersion
          pwsh: true
-
