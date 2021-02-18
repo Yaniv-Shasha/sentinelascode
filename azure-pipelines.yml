@@ -11,9 +11,6 @@ trigger:
    include:
      - AnalyticsRules/*
 
-variables:
-- group: Build-Prod
-
 stages:
 - stage: build_alert_rules
 
@@ -40,3 +37,26 @@ stages:
          inputs:
           PathtoPublish: '$(Pipeline.Workspace)'
           ArtifactName: RulesFile
+
+- stage: deploy_alert_rules
+  jobs:
+    - job: AgentJob
+      pool:
+       name: Azure Pipelines
+       vmImage: 'windows-2019'
+      variables: 
+      - group: Build-Prod
+      steps:
+      - download: current
+        artifact: RulesFile
+      - download: Scripts
+        patterns: '*.ps1'
+      - task: AzurePowerShell@4
+        displayName: 'Create and Update Alert Rules'
+        inputs:
+         azureSubscription: 'BuildEnv'
+         ScriptPath: '$(Pipeline.Workspace)/Scripts/Scripts/CreateAnalyticsRules.ps1'
+         ScriptArguments: '-Workspace $(Workspace) -RulesFile analytics-rules.json'
+         azurePowerShellVersion: LatestVersion
+         pwsh: true
+
